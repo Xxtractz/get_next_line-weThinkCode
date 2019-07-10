@@ -6,7 +6,7 @@
 /*   By: mbaloyi <mbaloyi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/24 12:51:47 by akalombo          #+#    #+#             */
-/*   Updated: 2019/07/10 14:52:03 by mbaloyi          ###   ########.fr       */
+/*   Updated: 2019/07/10 15:00:24 by mbaloyi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,11 @@ int		check(char **line, char *new, int i, t_var var){
 	return (LINE_FOUND);
 }
 
+int		gnl(int fd, char **line, int i, int s, char *new){
+	static t_var var;
+	char buff[BUFF_SIZE + 1];
 
-int			get_next_line(const int fd, char **line)
-{
-	static t_var var; // This is struct contains "j - keeps track of values in temp", "temp - *char from the buff "
-	char buff[BUFF_SIZE + 1]; // Allocation of  a fixed string to buff size 
-	char *new; // stores everything from temp after finding a new line
-	int i; // counter for *new  
-	int s ;  // iters through var.temp
-	 
-    i = 0; 
-    if (fd <  0 || line == NULL)
-        return (INVALID);
-    ft_bzero(buff, BUFF_SIZE + 1);
+	ft_bzero(buff, BUFF_SIZE + 1);
 	if (var.j > 0)
 	{
 	    if (!(new = ft_memalloc(sizeof(char) * (var.j + 1))))
@@ -81,11 +73,9 @@ int			get_next_line(const int fd, char **line)
 	if ((i = read(fd, buff, BUFF_SIZE)) == 0)
 		return (LINE_NOT_FOUND);
 	var.temp = ft_strjoin(var.temp, buff);
-    var.temp = read_line(i, fd, buff, var.temp);
-	if (var.temp == (char *)LINE_NOT_FOUND)
+	if ((var.temp = read_line(i, fd, buff, var.temp)) == (char *)LINE_NOT_FOUND)
 		return (0);
-	s = 0;
-	if (var.temp[s])
+	if (var.temp[(s = 0)])
 		while (var.temp[s] != '\n')
 			s++;
 	s++;
@@ -94,6 +84,18 @@ int			get_next_line(const int fd, char **line)
 	*line = ft_strncat(*line, var.temp, s - 1);
 	var.j = ft_strlen(var.temp) - s;
 	return (LINE_FOUND);
+}
+
+int			get_next_line(const int fd, char **line)
+{
+	char *new;
+	int i;  
+	int s ;
+	 
+    i = 0; 
+    if (fd <  0 || line == NULL)
+        return (INVALID);
+	return gnl(fd,line,i,s, new);
 }
 
 #include <stdio.h>
