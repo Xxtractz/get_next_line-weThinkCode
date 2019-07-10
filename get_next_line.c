@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: akalombo <akalombo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbaloyi <mbaloyi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/24 12:51:47 by akalombo          #+#    #+#             */
-/*   Updated: 2019/07/08 14:48:26 by akalombo         ###   ########.fr       */
+/*   Updated: 2019/07/10 12:04:22 by mbaloyi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,15 @@ static char      *read_line(int f, int fd, char *buff, char *temp)
 
 int			get_next_line(const int fd, char **line)
 {
-	static t_var var;
-	char buff[BUFF_SIZE + 1];
-	char *new;
-	int i;
- 	int f = 0;
-	int s = 0;
-    int w = 0;
-    i = 0;
+	static t_var var; // This is struct contains "j - keeps track of values in temp", "temp - *char from the buff "
+	char buff[BUFF_SIZE + 1]; // Allocation of  a fixed string to buff size 
+	char *new; // stores everything from temp after finding a new line
+	int i; // counter for *new  
+	int s ;  // iters through var.temp
+	int w ; // Should i allocate memory or not
+	w = 0; 
+	s = 0;
+    i = 0; 
 
     if (fd <  0 || line == NULL)
         return (INVALID);
@@ -59,7 +60,6 @@ int			get_next_line(const int fd, char **line)
 	    if (!new)
             return (INVALID);
 		s = ft_strlen(var.temp) - var.j;
-		f = s;
         w = var.j;
 		while (var.temp[s] != '\0')
 		{
@@ -78,17 +78,16 @@ int			get_next_line(const int fd, char **line)
 			var.j--;
 			i++;
 		}
-		s = f;
         var.temp = ft_strdup(new);
 	}//first read after this loop
     if (w == 0)
 	    var.temp = ft_strnew(BUFF_SIZE);
-	f = read(fd, buff, BUFF_SIZE);
-	if (f == 0)
+	i = read(fd, buff, BUFF_SIZE);
+	if (i == 0)
 		return (LINE_NOT_FOUND);
 	var.temp = ft_strjoin(var.temp, buff);
 //	printf("---------- %d", f);
-    var.temp = read_line(f, fd, buff, var.temp);//function call 
+    var.temp = read_line(i, fd, buff, var.temp);//function call 
 	if (var.temp == (char *)LINE_NOT_FOUND)
 		return (0);
 	s = 0;
