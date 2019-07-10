@@ -6,7 +6,7 @@
 /*   By: mbaloyi <mbaloyi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/24 12:51:47 by akalombo          #+#    #+#             */
-/*   Updated: 2019/07/10 15:00:24 by mbaloyi          ###   ########.fr       */
+/*   Updated: 2019/07/10 15:18:42 by mbaloyi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,8 @@ int		gnl(int fd, char **line, int i, int s, char *new){
 		{
 			new[i] = var.temp[s];
 			if (var.temp[s++] == '\n')
-			{
-				var.j--;
+				if(var.j--)
 				return check(line,new,i,var);
-			}
 			i++;
 			var.j--;
 		}
